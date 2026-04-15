@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>محلل الأسهم والعقارات - عبد الرحمن</title>
+    <style>
+        body { font-family: sans-serif; background: #06261d; color: white; display: flex; justify-content: center; padding: 20px; }
+        .box { background: #0a3d31; padding: 30px; border-radius: 15px; width: 100%; max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #10b981; }
+        #output { background: #06261d; padding: 15px; border-radius: 10px; min-height: 200px; margin: 20px 0; white-space: pre-wrap; line-height: 1.6; }
+        input { width: 70%; padding: 12px; border-radius: 8px; border: none; }
+        button { padding: 12px 25px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .disclaimer { font-size: 12px; color: #a7f3d0; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; margin-top: 20px; border-right: 4px solid #ef4444; }
+        .links { margin-top: 20px; display: flex; gap: 15px; justify-content: center; }
+        .links a { color: #34d399; text-decoration: none; font-size: 14px; border: 1px solid #34d399; padding: 5px 10px; border-radius: 5px; }
+        .back { display: block; text-align: center; margin-top: 20px; color: #94a3b8; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2 style="color:#10b981; text-align:center;">💸 محلل الأسهم والعقارات</h2>
+        
+        <div id="output">أدخل اسم الشركة أو المنطقة (مثلاً: سهم الدار، عقارات دبي)...</div>
+        
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="target" placeholder="اسم السهم أو العقار...">
+            <button onclick="analyze()">تحليل</button>
+        </div>
+
+        <div class="links">
+            <a href="https://www.adx.ae/" target="_blank">📈 سوق أبوظبي</a>
+            <a href="https://www.dfm.ae/" target="_blank">📉 سوق دبي المالي</a>
+        </div>
+
+        <div class="disclaimer">
+            <strong>⚠️ إخلاء مسؤولية:</strong> هذا التحليل يتم بواسطة الذكاء الاصطناعي ولأغراض تعليمية فقط. لا يعتبر نصيحة مالية مباشرة للبيع أو الشراء. قرار الاستثمار مسؤوليتك الشخصية.
+        </div>
+
+        <a href="/" class="back">🏠 العودة للرئيسية</a>
+    </div>
+
+    <script>
+        async function analyze() {
+            const t = document.getElementById('target').value;
+            const o = document.getElementById('output');
+            if(!t) return;
+            o.innerText = "جاري تحليل البيانات المالية لـ " + t + "...";
+            
+            const res = await fetch(`/stream_stocks?target=${encodeURIComponent(t)}`);
+            const reader = res.body.getReader();
+            const dec = new TextDecoder();
+            o.innerText = "";
+            while(true) {
+                const {done, value} = await reader.read();
+                if(done) break;
+                o.innerText += dec.decode(value);
+            }
+        }
+    </script>
+</body></html>
