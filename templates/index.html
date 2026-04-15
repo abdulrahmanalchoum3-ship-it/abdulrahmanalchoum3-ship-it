@@ -2,32 +2,67 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>منصة عبد الرحمن الذكية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة عبد الرحمن AI</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #121212; color: white; margin: 0; text-align: center; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal { background: #1e1e1e; padding: 30px; border-radius: 15px; max-width: 400px; width: 85%; border: 2px solid #f0b90b; }
+        .btn { background: #f0b90b; color: black; border: none; padding: 12px; margin: 10px 0; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.3s; }
+        .btn:hover { transform: scale(1.03); background: #d4a308; }
+        .hidden { display: none; }
+        .support-box { background-color: #2c1a1d; color: #ffb3b3; padding: 20px; border-radius: 12px; border: 1px solid #721c24; margin: 20px auto; max-width: 600px; }
+        .support-btn { background-color: #f0b90b; color: black; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 15px; }
+    </style>
 </head>
-<body style="background-color: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 50px;">
-    
-    <h1 style="color: #00d2ff;">أهلاً بك في منصة عبد الرحمن AI</h1>
-    <p>اختر القسم الذي تريد الدخول إليه:</p>
-    
-    <div style="margin-top: 30px;">
-        <a href="/chat_page" style="background: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; margin: 10px; display: inline-block;">💬 قسم الدردشة الذكية</a>
-        <a href="/stocks_page" style="background: #10b981; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; margin: 10px; display: inline-block;">📈 قسم الأسهم والعقارات</a>
-    </div>
+<body>
 
-    <div style="margin-top: 60px; border-top: 1px solid #334155; padding-top: 20px;">
-        <h2 style="color: #ef4444;">صناعة سورية SY 🇸🇾</h2>
-        <p>المبرمج: عبد الرحمن</p>
-        <p>للتواصل: <a href="mailto:abdulrahmanalchoum3@gmail.com" style="color: #00d2ff;">abdulrahmanalchoum3@gmail.com</a></p>
+<div id="step-lang" class="overlay">
+    <div class="modal">
+        <h2>اختر اللغة / Language</h2>
+        <button class="btn" onclick="nextStep('lang', 'ar')">العربية 🇸🇾</button>
+        <button class="btn" onclick="nextStep('lang', 'en')">English 🇺🇸</button>
     </div>
-<div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 10px; text-align: center; margin: 20px auto; border: 1px solid #f5c6cb; max-width: 800px;">
-    <p style="font-weight: bold; font-size: 1.1em;">🎁 إذا حاب تدعمنا بس ادخل سجل دخول ولا تخاف الموقع مضمون</p>
-    <a href="https://www.binance.com/referral/earn-together/refer2earn-usdc/claim?hl=en&ref=GRO_28502_NRJGG" 
-       target="_blank" 
-       style="background-color: #f0b90b; color: black; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; margin-top: 10px;">
-       سجل دخولك من هنا لدعمنا 🚀
-    </a>
 </div>
 
-   
+<div id="step-gender" class="overlay hidden">
+    <div class="modal">
+        <h2 id="gender-title">هل أنت ولد أم بنت؟</h2>
+        <button class="btn" onclick="nextStep('gender', 'boy')">ولد 👦</button>
+        <button class="btn" onclick="nextStep('gender', 'girl')">بنت 👧</button>
+    </div>
+</div>
 
+<div id="step-auth" class="overlay hidden">
+    <div class="modal">
+        <h2 id="auth-title">طريقة التسجيل المضمونة</h2>
+        <button class="btn" style="background: white;" onclick="finish()">التسجيل بواسطة Google</button>
+        <button class="btn" onclick="finish()">التسجيل بالبريد الإلكتروني</button>
+    </div>
+</div>
 
+<div id="main-content" class="hidden" style="padding: 20px;">
+    <h1>مرحباً بك في منصة عبد الرحمن AI 🚀</h1>
+    
+    <div class="support-box">
+        <h3 id="support-text">🎁 إذا حاب تدعمنا بس ادخل سجل دخول ولا تخاف الموقع مضمون</h3>
+        <a href="{{ support_link }}" target="_blank" class="support-btn" id="support-link-text">سجل دخولك من هنا لدعمنا 🚀</a>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+        <button class="btn" style="max-width: 200px;" onclick="location.href='/stocks_page'">📈 تحليل الأسهم</button>
+        <button class="btn" style="max-width: 200px; background: #28a745; color: white;" onclick="location.href='/chat_page'">💬 ابدأ الدردشة</button>
+    </div>
+</div>
+
+<script>
+    let userData = {};
+    function nextStep(step, value) {
+        userData[step] = value;
+        if(step === 'lang') {
+            document.getElementById('step-lang').classList.add('hidden');
+            document.getElementById('step-gender').classList.remove('hidden');
+            if(value === 'en') {
+                document.getElementById('gender-title').innerText = "Are you a Boy or a Girl?";
+                document.getElementById('auth-title').innerText = "Secure Signup";
+                document.getElementById('support-text').innerText = "🎁 Support us by logging in
