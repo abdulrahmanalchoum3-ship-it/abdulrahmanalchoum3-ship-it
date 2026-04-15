@@ -2,58 +2,80 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>محلل الأسهم والعقارات - عبد الرحمن</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل الأسهم والعقارات | صناعة سورية 🇸🇾</title>
     <style>
-        body { font-family: sans-serif; background: #06261d; color: white; display: flex; justify-content: center; padding: 20px; }
-        .box { background: #0a3d31; padding: 30px; border-radius: 15px; width: 100%; max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #10b981; }
-        #output { background: #06261d; padding: 15px; border-radius: 10px; min-height: 200px; margin: 20px 0; white-space: pre-wrap; line-height: 1.6; }
-        input { width: 70%; padding: 12px; border-radius: 8px; border: none; }
-        button { padding: 12px 25px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .disclaimer { font-size: 12px; color: #a7f3d0; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; margin-top: 20px; border-right: 4px solid #ef4444; }
-        .links { margin-top: 20px; display: flex; gap: 15px; justify-content: center; }
-        .links a { color: #34d399; text-decoration: none; font-size: 14px; border: 1px solid #34d399; padding: 5px 10px; border-radius: 5px; }
-        .back { display: block; text-align: center; margin-top: 20px; color: #94a3b8; text-decoration: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b0e11; color: #eaecef; margin: 0; padding: 20px; text-align: center; }
+        header { border-bottom: 2px solid #f0b90b; padding-bottom: 15px; margin-bottom: 30px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .input-group { background: #1e2329; padding: 25px; border-radius: 15px; border: 1px solid #474d57; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        input { width: 85%; background: #2b3139; border: 1px solid #474d57; color: white; padding: 12px; border-radius: 8px; font-size: 16px; outline: none; margin-bottom: 15px; text-align: center; }
+        input:focus { border-color: #f0b90b; box-shadow: 0 0 10px rgba(240, 185, 11, 0.2); }
+        .analyze-btn { background: #f0b90b; color: #000; border: none; padding: 12px 40px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.3s; width: 90%; }
+        .analyze-btn:hover { background: #fcd535; transform: translateY(-2px); }
+        #result-box { margin-top: 30px; background: #1e2329; padding: 25px; border-radius: 15px; border-right: 5px solid #f0b90b; text-align: right; min-height: 150px; line-height: 1.8; font-size: 1.1em; color: #f0b90b; }
+        .home-link { display: inline-block; margin-top: 25px; color: #848e9c; text-decoration: none; font-size: 0.9em; transition: 0.3s; }
+        .home-link:hover { color: #f0b90b; }
+        footer { margin-top: 50px; padding: 20px; border-top: 1px solid #2b3139; color: #848e9c; font-size: 0.8em; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2 style="color:#10b981; text-align:center;">💸 محلل الأسهم والعقارات</h2>
-        
-        <div id="output">أدخل اسم الشركة أو المنطقة (مثلاً: سهم الدار، عقارات دبي)...</div>
-        
-        <div style="display:flex; gap:10px;">
-            <input type="text" id="target" placeholder="اسم السهم أو العقار...">
-            <button onclick="analyze()">تحليل</button>
-        </div>
 
-        <div class="links">
-            <a href="https://www.adx.ae/" target="_blank">📈 سوق أبوظبي</a>
-            <a href="https://www.dfm.ae/" target="_blank">📉 سوق دبي المالي</a>
-        </div>
+<div class="container">
+    <header>
+        <h1 style="color: #f0b90b; margin-bottom: 5px;">📉 محلل الأسهم والعقارات الذكي</h1>
+        <p>تحليلات مالية دقيقة بلمسة سورية 🇸🇾</p>
+    </header>
 
-        <div class="disclaimer">
-            <strong>⚠️ إخلاء مسؤولية:</strong> هذا التحليل يتم بواسطة الذكاء الاصطناعي ولأغراض تعليمية فقط. لا يعتبر نصيحة مالية مباشرة للبيع أو الشراء. قرار الاستثمار مسؤوليتك الشخصية.
-        </div>
-
-        <a href="/" class="back">🏠 العودة للرئيسية</a>
+    <div class="input-group">
+        <h3 style="color: #f0b90b;">ماذا تريد أن نحلل اليوم؟</h3>
+        <input type="text" id="target-name" placeholder="مثال: أسهم تسلا، عقارات دبي، الذهب، بيتكوين...">
+        <br>
+        <button class="analyze-btn" onclick="runAnalysis()">بدء التحليل المالي 🔍</button>
     </div>
 
-    <script>
-        async function analyze() {
-            const t = document.getElementById('target').value;
-            const o = document.getElementById('output');
-            if(!t) return;
-            o.innerText = "جاري تحليل البيانات المالية لـ " + t + "...";
-            
-            const res = await fetch(`/stream_stocks?target=${encodeURIComponent(t)}`);
-            const reader = res.body.getReader();
-            const dec = new TextDecoder();
-            o.innerText = "";
-            while(true) {
-                const {done, value} = await reader.read();
-                if(done) break;
-                o.innerText += dec.decode(value);
-            }
+    <div id="result-box">
+        <i>أدخل اسم السهم أو العقار أعلاه وسيقوم الذكاء الاصطناعي بدراسة السوق لك فوراً... 🧠✨</i>
+    </div>
+
+    <a href="/" class="home-link">⬅️ العودة للرئيسية</a>
+
+    <footer>
+        <p>تصميم المبدع: <span style="color: #f0b90b;">عبد الرحمن</span></p>
+        <p>🇸🇾 فخر الصناعة السورية | التواصل: abdulrahmanalchoum3@gmail.com</p>
+    </footer>
+</div>
+
+<script>
+    async function runAnalysis() {
+        const target = document.getElementById('target-name').value;
+        const resultBox = document.getElementById('result-box');
+        
+        if (!target.trim()) {
+            alert("يا بطل، اكتب اسم السهم أو العقار أولاً!");
+            return;
         }
-    </script>
-</body></html>
+
+        resultBox.innerHTML = "<b>جاري تحليل اتجاهات السوق وجمع البيانات... 📊⏳</b>";
+
+        try {
+            const response = await fetch(`/stream_stocks?target=${encodeURIComponent(target)}`);
+            const reader = response.body.getReader();
+            resultBox.innerHTML = ""; // مسح رسالة الانتظار
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = new TextDecoder().decode(value);
+                resultBox.innerHTML += chunk;
+                // سكرول تلقائي للأسفل لرؤية التحليل سطر بسطر
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        } catch (error) {
+            resultBox.innerHTML = "⚠️ حدث خطأ في الاتصال بالسيرفر، تأكد أن الموقع يعمل في Render.";
+        }
+    }
+</script>
+
+</body>
+</html>
