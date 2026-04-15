@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة عبد الرحمن AI | صناعة سورية 🇸🇾</title>
+    <title>منصة عبد الرحمن AI | 🇸🇾</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #0b0e11; color: #eaecef; margin: 0; text-align: center; }
+        body { font-family: sans-serif; background-color: #0b0e11; color: #eaecef; margin: 0; text-align: center; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal { background: #1e2329; padding: 30px; border-radius: 15px; max-width: 400px; width: 85%; border: 2px solid #f0b90b; box-shadow: 0 0 15px rgba(240, 185, 11, 0.3); }
-        .btn { background: #f0b90b; color: #000; border: none; padding: 12px; margin: 10px 0; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn:hover { background: #fcd535; transform: translateY(-2px); }
+        .modal { background: #1e2329; padding: 30px; border-radius: 15px; max-width: 400px; width: 85%; border: 2px solid #f0b90b; }
+        .btn { background: #f0b90b; color: black; border: none; padding: 12px; margin: 10px 0; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn:hover { background: #fcd535; transform: scale(1.02); }
         .hidden { display: none; }
-        .support-box { background-color: #1e2329; color: #f0b90b; padding: 20px; border-radius: 12px; border: 1px solid #f0b90b; margin: 20px auto; max-width: 600px; }
-        .support-btn { background-color: #f0b90b; color: black; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 15px; }
-        footer { margin-top: 50px; padding: 20px; font-size: 0.9em; color: #848e9c; border-top: 1px solid #2b3139; }
-        .syrian-flag { color: #eb4d4b; font-weight: bold; }
+        .support-box { background: #1e2329; color: #f0b90b; padding: 20px; border-radius: 12px; border: 1px solid #f0b90b; margin: 20px auto; max-width: 600px; }
+        footer { margin-top: 50px; padding: 20px; border-top: 1px solid #2b3139; color: #848e9c; }
     </style>
 </head>
 <body>
@@ -37,48 +35,54 @@
 
 <div id="step-auth" class="overlay hidden">
     <div class="modal">
-        <h2 id="auth-title">طريقة التسجيل المضمونة</h2>
-        <button class="btn" style="background: #fff;" onclick="finish()">التسجيل بواسطة Google</button>
-        <button class="btn" onclick="finish()">التسجيل بالبريد الإلكتروني</button>
+        <h2 id="auth-title">التسجيل المضمون</h2>
+        <div id="auth-options">
+            <button class="btn" style="background: white;" onclick="finish()">Google</button>
+            <button class="btn" onclick="showEmail()">بالبريد الإلكتروني</button>
+        </div>
+        <div id="email-box" class="hidden">
+            <input type="email" id="u-email" placeholder="أدخل إيميلك" style="width:90%; padding:10px; margin-bottom:10px; border-radius:5px;">
+            <button class="btn" onclick="submitEmail()">تأكيد 📧</button>
+        </div>
     </div>
 </div>
 
 <div id="main-content" class="hidden" style="padding: 20px;">
-    <h1 style="color: #f0b90b;">منصة عبد الرحمن AI 🚀</h1>
-    <p>بوابتك الذكية للدردشة والأسهم</p>
-    
+    <h1 style="color:#f0b90b;">منصة عبد الرحمن AI 🚀</h1>
     <div class="support-box">
         <h3 id="support-text">🎁 إذا حاب تدعمنا بس ادخل سجل دخول ولا تخاف الموقع مضمون</h3>
-        <a href="{{ support_link }}" target="_blank" class="support-btn" id="support-link-text">سجل دخولك من هنا لدعمنا 🚀</a>
+        <a href="{{ support_link }}" target="_blank" class="btn" style="text-decoration:none; display:inline-block; width:auto; padding:10px 20px;">سجل دخولك من هنا لدعمنا 🚀</a>
     </div>
-
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
         <button class="btn" style="max-width: 200px;" onclick="location.href='/stocks_page'">📈 تحليل الأسهم</button>
         <button class="btn" style="max-width: 200px; background: #2ebd85; color: white;" onclick="location.href='/chat_page'">💬 ابدأ الدردشة</button>
     </div>
-
     <footer>
-        <p>تم التصميم والبرمجة بواسطة <span style="color: #f0b90b;">عبد الرحمن</span></p>
-        <p>🇸🇾 <span class="syrian-flag">صناعة سورية</span> | التواصل: <a href="mailto:abdulrahmanalchoum3@gmail.com" style="color: #f0b90b; text-decoration: none;">abdulrahmanalchoum3@gmail.com</a></p>
+        <p>تصميم وبرمجة: <span style="color:#f0b90b;">عبد الرحمن</span></p>
+        <p>🇸🇾 صناعة سورية | <a href="mailto:abdulrahmanalchoum3@gmail.com" style="color:#f0b90b;">abdulrahmanalchoum3@gmail.com</a></p>
     </footer>
 </div>
 
 <script>
     let userData = {};
-    function nextStep(step, value) {
-        userData[step] = value;
-        if(step === 'lang') {
+    function nextStep(step, val) {
+        userData[step] = val;
+        if(step==='lang') {
             document.getElementById('step-lang').classList.add('hidden');
             document.getElementById('step-gender').classList.remove('hidden');
-            if(value === 'en') {
-                document.getElementById('gender-title').innerText = "Are you a Boy or a Girl?";
-                document.getElementById('auth-title').innerText = "Secure Signup";
-                document.getElementById('support-text').innerText = "🎁 Support us by logging in. Safe & Guaranteed!";
-                document.getElementById('support-link-text').innerText = "Login here 🚀";
-            }
-        } else if(step === 'gender') {
+        } else if(step==='gender') {
             document.getElementById('step-gender').classList.add('hidden');
             document.getElementById('step-auth').classList.remove('hidden');
+        }
+    }
+    function showEmail() {
+        document.getElementById('auth-options').classList.add('hidden');
+        document.getElementById('email-box').classList.remove('hidden');
+    }
+    function submitEmail() {
+        if(document.getElementById('u-email').value) {
+            alert("تم إرسال رسالة التأكيد! يمكنك الدخول الآن.");
+            finish();
         }
     }
     function finish() {
