@@ -1,93 +1,54 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة عبد الرحمن AI | 🇸🇾</title>
+    <meta charset="UTF-8"><title>التحقق | عبدالرحمن AI</title>
     <style>
-        body { font-family: sans-serif; background-color: #0b0e11; color: #eaecef; margin: 0; text-align: center; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal { background: #1e2329; padding: 30px; border-radius: 15px; max-width: 400px; width: 85%; border: 2px solid #f0b90b; }
-        .btn { background: #f0b90b; color: black; border: none; padding: 12px; margin: 10px 0; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn:hover { background: #fcd535; transform: scale(1.02); }
+        body { font-family: sans-serif; background: #0b0e11; color: white; text-align: center; margin: 0; }
+        .overlay { position: fixed; top: 0; width: 100%; height: 100%; background: #0b0e11; display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal { background: #1e2329; padding: 30px; border-radius: 15px; border: 2px solid #f0b90b; width: 85%; max-width: 400px; }
+        .btn { background: #f0b90b; color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; background: #2b3139; border: 1px solid #474d57; color: white; border-radius: 5px; outline: none; }
         .hidden { display: none; }
-        .support-box { background: #1e2329; color: #f0b90b; padding: 20px; border-radius: 12px; border: 1px solid #f0b90b; margin: 20px auto; max-width: 600px; }
-        footer { margin-top: 50px; padding: 20px; border-top: 1px solid #2b3139; color: #848e9c; }
     </style>
 </head>
 <body>
-
-<div id="step-lang" class="overlay">
+<div id="step-check" class="overlay">
     <div class="modal">
-        <h2>اختر اللغة / Language</h2>
-        <button class="btn" onclick="nextStep('lang', 'ar')">العربية 🇸🇾</button>
-        <button class="btn" onclick="nextStep('lang', 'en')">English 🇺🇸</button>
-    </div>
-</div>
-
-<div id="step-gender" class="overlay hidden">
-    <div class="modal">
-        <h2 id="gender-title">هل أنت ولد أم بنت؟</h2>
-        <button class="btn" onclick="nextStep('gender', 'boy')">ولد 👦</button>
-        <button class="btn" onclick="nextStep('gender', 'girl')">بنت 👧</button>
-    </div>
-</div>
-
-<div id="step-auth" class="overlay hidden">
-    <div class="modal">
-        <h2 id="auth-title">التسجيل المضمون</h2>
-        <div id="auth-options">
-            <button class="btn" style="background: white;" onclick="finish()">Google</button>
-            <button class="btn" onclick="showEmail()">بالبريد الإلكتروني</button>
-        </div>
-        <div id="email-box" class="hidden">
-            <input type="email" id="u-email" placeholder="أدخل إيميلك" style="width:90%; padding:10px; margin-bottom:10px; border-radius:5px;">
-            <button class="btn" onclick="submitEmail()">تأكيد 📧</button>
+        <h2>مرحباً بك / Welcome</h2>
+        <input type="text" id="username" placeholder="أدخل اسمك / Enter Name">
+        <input type="number" id="age" placeholder="العمر / Age">
+        <p style="font-size: 11px; color: #848e9c;">* يمنع دخول من هم دون الـ 10 سنوات</p>
+        <div style="display:flex; gap:10px;">
+            <button class="btn" onclick="validate('ar')">العربية 🇸🇾</button>
+            <button class="btn" style="background:#444; color:white;" onclick="validate('en')">English 🇺🇸</button>
         </div>
     </div>
 </div>
-
-<div id="main-content" class="hidden" style="padding: 20px;">
-    <h1 style="color:#f0b90b;">منصة عبد الرحمن AI 🚀</h1>
-    <div class="support-box">
-        <h3 id="support-text">🎁 إذا حاب تدعمنا بس ادخل سجل دخول ولا تخاف الموقع مضمون</h3>
-        <a href="{{ support_link }}" target="_blank" class="btn" style="text-decoration:none; display:inline-block; width:auto; padding:10px 20px;">سجل دخولك من هنا لدعمنا 🚀</a>
+<div id="main-content" class="hidden" style="padding:40px 20px;">
+    <h1 id="welcome-msg" style="color:#f0b90b;"></h1>
+    <div style="margin: 20px auto; max-width: 500px; background: #1e2329; padding: 25px; border-radius: 15px; border: 1px solid #f0b90b;">
+        <a href="{{ support_link }}" target="_blank" class="btn" style="text-decoration:none; display:block;">🎁 سجل لدعمنا 🚀</a>
     </div>
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-        <button class="btn" style="max-width: 200px;" onclick="location.href='/stocks_page'">📈 تحليل الأسهم</button>
-        <button class="btn" style="max-width: 200px; background: #2ebd85; color: white;" onclick="location.href='/chat_page'">💬 ابدأ الدردشة</button>
+    <div style="display:flex; justify-content:center; gap:20px;">
+        <button class="btn" style="width:150px; background:#2ebd85; color:white;" onclick="location.href='/chat_page'">💬 الدردشة</button>
+        <button class="btn" style="width:150px;" onclick="location.href='/stocks_page'">📈 الأسهم</button>
     </div>
-    <footer>
-        <p>تصميم وبرمجة: <span style="color:#f0b90b;">عبد الرحمن</span></p>
-        <p>🇸🇾 صناعة سورية | <a href="mailto:abdulrahmanalchoum3@gmail.com" style="color:#f0b90b;">abdulrahmanalchoum3@gmail.com</a></p>
-    </footer>
 </div>
-
 <script>
-    let userData = {};
-    function nextStep(step, val) {
-        userData[step] = val;
-        if(step==='lang') {
-            document.getElementById('step-lang').classList.add('hidden');
-            document.getElementById('step-gender').classList.remove('hidden');
-        } else if(step==='gender') {
-            document.getElementById('step-gender').classList.add('hidden');
-            document.getElementById('step-auth').classList.remove('hidden');
-        }
+    window.onload = () => { if(localStorage.getItem('app_entered') === 'true') showMain(); };
+    function validate(lang) {
+        const name = document.getElementById('username').value;
+        const age = parseInt(document.getElementById('age').value);
+        if(!name || isNaN(age)) { alert("يرجى إكمال البيانات!"); return; }
+        if(age < 10) { alert("عذراً، الدخول للمنصة +10 سنوات فقط!"); return; }
+        localStorage.setItem('app_entered', 'true'); localStorage.setItem('user_name', name); localStorage.setItem('user_lang', lang);
+        showMain();
     }
-    function showEmail() {
-        document.getElementById('auth-options').classList.add('hidden');
-        document.getElementById('email-box').classList.remove('hidden');
-    }
-    function submitEmail() {
-        if(document.getElementById('u-email').value) {
-            alert("تم إرسال رسالة التأكيد! يمكنك الدخول الآن.");
-            finish();
-        }
-    }
-    function finish() {
-        document.getElementById('step-auth').classList.add('hidden');
+    function showMain() {
+        document.getElementById('step-check').classList.add('hidden');
         document.getElementById('main-content').classList.remove('hidden');
+        const name = localStorage.getItem('user_name'); const lang = localStorage.getItem('user_lang');
+        document.getElementById('welcome-msg').innerText = lang === 'ar' ? `أهلاً بك يا ${name} 🚀` : `Welcome, ${name} 🚀`;
     }
 </script>
 </body>
