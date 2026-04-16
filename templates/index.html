@@ -1,54 +1,61 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><title>التحقق | عبدالرحمن AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة عبدالرحمن الصانع سوري</title>
     <style>
-        body { font-family: sans-serif; background: #0b0e11; color: white; text-align: center; margin: 0; }
-        .overlay { position: fixed; top: 0; width: 100%; height: 100%; background: #0b0e11; display: flex; justify-content: center; align-items: center; z-index: 100; }
-        .modal { background: #1e2329; padding: 30px; border-radius: 15px; border: 2px solid #f0b90b; width: 85%; max-width: 400px; }
-        .btn { background: #f0b90b; color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
-        input { width: 90%; padding: 12px; margin: 10px 0; background: #2b3139; border: 1px solid #474d57; color: white; border-radius: 5px; outline: none; }
+        :root { --primary: #1a73e8; --bg: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 90%; max-width: 400px; text-align: center; border: 1px solid #e0e0e0; }
         .hidden { display: none; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
+        .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .menu-btn { background: #f0f4f9; color: #1a73e8; border: 1px solid #d2e3fc; padding: 15px; border-radius: 12px; width: 100%; margin-top: 12px; cursor: pointer; font-weight: bold; text-decoration: none; display: block; box-sizing: border-box; }
+        .footer { margin-top: 30px; font-size: 12px; color: #70757a; }
     </style>
 </head>
 <body>
-<div id="step-check" class="overlay">
-    <div class="modal">
-        <h2>مرحباً بك / Welcome</h2>
-        <input type="text" id="username" placeholder="أدخل اسمك / Enter Name">
-        <input type="number" id="age" placeholder="العمر / Age">
-        <p style="font-size: 11px; color: #848e9c;">* يمنع دخول من هم دون الـ 10 سنوات</p>
-        <div style="display:flex; gap:10px;">
-            <button class="btn" onclick="validate('ar')">العربية 🇸🇾</button>
-            <button class="btn" style="background:#444; color:white;" onclick="validate('en')">English 🇺🇸</button>
-        </div>
+
+<div id="login-screen" class="card">
+    <h2>مرحباً بك ✨</h2>
+    <input type="text" id="username" placeholder="ما هو اسمك؟">
+    <input type="number" id="age" placeholder="العمر">
+    <select id="gender">
+        <option value="">هل أنت ولد أم بنت؟</option>
+        <option value="ولد">ولد ⚽</option>
+        <option value="بنت">بنت ✨</option>
+    </select>
+    <button class="btn" onclick="validate()">ابدأ الاستخدام</button>
+</div>
+
+<div id="main-menu" class="card hidden">
+    <h2 id="welcome-title"></h2>
+    <p style="color:#5f6368;">اختر الوجهة المطلوبة:</p>
+    <a href="/chat_page" class="menu-btn">💬 شات الذكاء الاصطناعي</a>
+    <a href="/stocks_page" class="menu-btn">📈 الأسهم والعقارات</a>
+    <div class="footer">
+        بواسطة المبرمج: <b>عبدالرحمن الصانع سوري</b><br>
+        للتواصل: {{ email }}
     </div>
 </div>
-<div id="main-content" class="hidden" style="padding:40px 20px;">
-    <h1 id="welcome-msg" style="color:#f0b90b;"></h1>
-    <div style="margin: 20px auto; max-width: 500px; background: #1e2329; padding: 25px; border-radius: 15px; border: 1px solid #f0b90b;">
-        <a href="{{ support_link }}" target="_blank" class="btn" style="text-decoration:none; display:block;">🎁 سجل لدعمنا 🚀</a>
-    </div>
-    <div style="display:flex; justify-content:center; gap:20px;">
-        <button class="btn" style="width:150px; background:#2ebd85; color:white;" onclick="location.href='/chat_page'">💬 الدردشة</button>
-        <button class="btn" style="width:150px;" onclick="location.href='/stocks_page'">📈 الأسهم</button>
-    </div>
-</div>
+
 <script>
-    window.onload = () => { if(localStorage.getItem('app_entered') === 'true') showMain(); };
-    function validate(lang) {
-        const name = document.getElementById('username').value;
-        const age = parseInt(document.getElementById('age').value);
-        if(!name || isNaN(age)) { alert("يرجى إكمال البيانات!"); return; }
-        if(age < 10) { alert("عذراً، الدخول للمنصة +10 سنوات فقط!"); return; }
-        localStorage.setItem('app_entered', 'true'); localStorage.setItem('user_name', name); localStorage.setItem('user_lang', lang);
-        showMain();
+    window.onload = function() {
+        if (localStorage.getItem('user_name')) { showMainMenu(); }
+    };
+    function validate() {
+        const n = document.getElementById('username').value;
+        const a = document.getElementById('age').value;
+        const g = document.getElementById('gender').value;
+        if(!n || !a || !g) { alert("أكمل بياناتك يا بطل!"); return; }
+        localStorage.setItem('user_name', n);
+        showMainMenu();
     }
-    function showMain() {
-        document.getElementById('step-check').classList.add('hidden');
-        document.getElementById('main-content').classList.remove('hidden');
-        const name = localStorage.getItem('user_name'); const lang = localStorage.getItem('user_lang');
-        document.getElementById('welcome-msg').innerText = lang === 'ar' ? `أهلاً بك يا ${name} 🚀` : `Welcome, ${name} 🚀`;
+    function showMainMenu() {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('main-menu').classList.remove('hidden');
+        document.getElementById('welcome-title').innerText = `أهلاً بك يا ${localStorage.getItem('user_name')} 👋`;
     }
 </script>
 </body>
