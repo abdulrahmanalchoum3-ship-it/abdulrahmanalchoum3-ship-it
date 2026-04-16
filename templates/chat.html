@@ -1,54 +1,47 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><title>الدردشة | عبدالرحمن AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat | عبدالرحمن الصانع سوري</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; color: #333; margin: 0; display: flex; height: 100vh; }
-        .sidebar { width: 260px; background: #2c2c2c; color: white; padding: 15px; display: flex; flex-direction: column; }
-        .new-btn { border: 1px solid #666; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center; margin-bottom: 20px; }
-        .history { flex: 1; overflow-y: auto; }
-        .chat-item { padding: 10px; background: #3d3d3d; border-radius: 5px; margin-bottom: 5px; cursor: pointer; font-size: 13px; }
-        .main { flex: 1; display: flex; flex-direction: column; background: #ffffff; }
-        #chat-window { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .msg { max-width: 80%; padding: 15px; border-radius: 15px; font-size: 16px; color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .u { align-self: flex-end; background: #e3efff; }
-        .b { align-self: flex-start; background: #ffffff; border: 1px solid #eee; }
-        input { width: 95%; padding: 15px; margin: 20px; border: 2px solid #ddd; border-radius: 10px; outline: none; font-size: 16px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; margin: 0; display: flex; height: 100vh; flex-direction: column; }
+        .header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px 10%; display: flex; flex-direction: column; gap: 20px; }
+        .msg { max-width: 85%; padding: 12px 18px; border-radius: 20px; font-size: 16px; line-height: 1.6; }
+        .u { align-self: flex-end; background: #e9eef6; color: #1f1f1f; }
+        .b { align-self: flex-start; background: transparent; color: #1f1f1f; }
+        .input-area { padding: 20px 10%; }
+        .input-box { background: #f0f4f9; border-radius: 30px; padding: 5px 20px; display: flex; align-items: center; }
+        input { flex: 1; border: none; background: transparent; padding: 12px; outline: none; font-size: 16px; }
+        .back-btn { text-decoration: none; color: #1a73e8; font-weight: bold; }
     </style>
 </head>
 <body>
-<div class="sidebar">
-    <div class="new-btn" onclick="startNew()">+ محادثة جديدة</div>
-    <div class="history" id="h-list"></div>
-    <a href="/" style="color:#bbb; text-decoration:none; text-align:center; font-size:12px;">🏠 الرئيسية</a>
+<div class="header">
+    <span style="font-weight:bold;">عبدالرحمن AI</span>
+    <a href="/" class="back-btn">🏠 الرئيسية</a>
 </div>
-<div class="main">
-    <div id="chat-window"></div>
-    <input type="text" id="inp" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') send()">
+<div id="chat-window">
+    <div class="msg b">مرحباً! أنا مساعدك الذكي لعام 2026. كيف أخدمك؟</div>
+</div>
+<div class="input-area">
+    <div class="input-box">
+        <input type="text" id="inp" placeholder="اكتب سؤالك هنا..." onkeypress="if(event.key==='Enter') send()">
+    </div>
+    <p style="text-align:center; font-size:10px; color:#aaa; margin-top:10px;">بواسطة المبرمج عبدالرحمن الصانع سوري</p>
 </div>
 <script>
-    let chats = JSON.parse(localStorage.getItem('chats_db')) || {}; let curId = null;
-    window.onload = renderHist;
-    function renderHist() {
-        const h = document.getElementById('h-list'); h.innerHTML = "";
-        Object.keys(chats).reverse().forEach(id => {
-            const div = document.createElement('div'); div.className = "chat-item"; div.innerText = chats[id].title;
-            div.onclick = () => loadChat(id); h.appendChild(div);
-        });
-    }
-    function startNew() { curId = Date.now().toString(); chats[curId] = { title: "محادثة جديدة", html: "" }; document.getElementById('chat-window').innerHTML = ""; }
     async function send() {
         const inp = document.getElementById('inp'); if(!inp.value.trim()) return;
-        if(!curId) startNew(); const txt = inp.value; inp.value = "";
-        if(chats[curId].title === "محادثة جديدة") { chats[curId].title = txt.substring(0, 25); renderHist(); }
+        const txt = inp.value; inp.value = "";
         add(txt, 'u'); const b = add("...", 'b');
         const res = await fetch(`/stream?user_input=${encodeURIComponent(txt)}`);
-        const read = res.body.getReader(); b.innerText = "";
+        const reader = res.body.getReader(); b.innerText = "";
         while(true) {
-            const {done, value} = await read.read(); if(done) break;
+            const {done, value} = await reader.read(); if(done) break;
             b.innerText += new TextDecoder().decode(value);
-            chats[curId].html = document.getElementById('chat-window').innerHTML;
-            localStorage.setItem('chats_db', JSON.stringify(chats));
+            document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
         }
     }
     function add(t, c) {
@@ -57,7 +50,6 @@
         document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
         return d;
     }
-    function loadChat(id) { curId = id; document.getElementById('chat-window').innerHTML = chats[id].html; }
 </script>
 </body>
 </html>
