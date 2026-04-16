@@ -5,38 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة عبدالرحمن الصانع سوري</title>
     <style>
-        :root { --primary: #1a73e8; --bg: #ffffff; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8f9fa; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .card { background: #fff; padding: 40px; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 90%; max-width: 400px; text-align: center; border: 1px solid #e0e0e0; }
+        :root { --primary: #1a73e8; --bg: #ffffff; --gold: #f0b90b; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { background: #fff; padding: 30px; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 90%; max-width: 400px; text-align: center; border: 1px solid #e0e0e0; }
         .hidden { display: none; }
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
-        .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; text-decoration: none; display: block; }
+        
+        /* تصميم زر الدعم المميز */
+        .support-btn { 
+            background: var(--gold); 
+            color: black; 
+            border: 2px solid #e2ae0a; 
+            padding: 15px; 
+            border-radius: 12px; 
+            width: 100%; 
+            margin: 20px 0; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-decoration: none; 
+            display: block;
+            box-sizing: border-box;
+            animation: pulse 2s infinite; /* حركة تنبيه بسيطة */
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
         .menu-btn { background: #f0f4f9; color: #1a73e8; border: 1px solid #d2e3fc; padding: 15px; border-radius: 12px; width: 100%; margin-top: 12px; cursor: pointer; font-weight: bold; text-decoration: none; display: block; box-sizing: border-box; }
-        .footer { margin-top: 30px; font-size: 12px; color: #70757a; }
+        .footer { margin-top: 20px; font-size: 11px; color: #70757a; }
     </style>
 </head>
 <body>
 
 <div id="login-screen" class="card">
     <h2>مرحباً بك ✨</h2>
-    <input type="text" id="username" placeholder="ما هو اسمك؟">
-    <input type="number" id="age" placeholder="العمر">
-    <select id="gender">
+    <input type="text" id="username" placeholder="ما هو اسمك؟" style="width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #ddd;">
+    <select id="gender" style="width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #ddd;">
         <option value="">هل أنت ولد أم بنت؟</option>
         <option value="ولد">ولد ⚽</option>
         <option value="بنت">بنت ✨</option>
     </select>
-    <button class="btn" onclick="validate()">ابدأ الاستخدام</button>
+    <button class="btn" onclick="validate()">دخول</button>
 </div>
 
 <div id="main-menu" class="card hidden">
     <h2 id="welcome-title"></h2>
-    <p style="color:#5f6368;">اختر الوجهة المطلوبة:</p>
+    
+    <a href="{{ support_link }}" target="_blank" class="support-btn">🎁 إذا حابب تدعمنا اضغط هنا 🚀</a>
+
+    <p style="color:#5f6368; font-size:14px;">خدمات المنصة:</p>
     <a href="/chat_page" class="menu-btn">💬 شات الذكاء الاصطناعي</a>
     <a href="/stocks_page" class="menu-btn">📈 الأسهم والعقارات</a>
+    
     <div class="footer">
-        بواسطة المبرمج: <b>عبدالرحمن الصانع سوري</b><br>
-        للتواصل: {{ email }}
+        بواسطة المبرمج: <b>عبدالرحمن الصانع سوري</b>
     </div>
 </div>
 
@@ -44,14 +68,15 @@
     window.onload = function() {
         if (localStorage.getItem('user_name')) { showMainMenu(); }
     };
+
     function validate() {
         const n = document.getElementById('username').value;
-        const a = document.getElementById('age').value;
         const g = document.getElementById('gender').value;
-        if(!n || !a || !g) { alert("أكمل بياناتك يا بطل!"); return; }
+        if(!n || !g) { alert("أكمل البيانات!"); return; }
         localStorage.setItem('user_name', n);
         showMainMenu();
     }
+
     function showMainMenu() {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('main-menu').classList.remove('hidden');
