@@ -1,81 +1,38 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محلل الأسهم والعقارات | صناعة سورية 🇸🇾</title>
+    <meta charset="UTF-8"><title>الأسهم | عبدالرحمن AI</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b0e11; color: #eaecef; margin: 0; padding: 20px; text-align: center; }
-        header { border-bottom: 2px solid #f0b90b; padding-bottom: 15px; margin-bottom: 30px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .input-group { background: #1e2329; padding: 25px; border-radius: 15px; border: 1px solid #474d57; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        input { width: 85%; background: #2b3139; border: 1px solid #474d57; color: white; padding: 12px; border-radius: 8px; font-size: 16px; outline: none; margin-bottom: 15px; text-align: center; }
-        input:focus { border-color: #f0b90b; box-shadow: 0 0 10px rgba(240, 185, 11, 0.2); }
-        .analyze-btn { background: #f0b90b; color: #000; border: none; padding: 12px 40px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.3s; width: 90%; }
-        .analyze-btn:hover { background: #fcd535; transform: translateY(-2px); }
-        #result-box { margin-top: 30px; background: #1e2329; padding: 25px; border-radius: 15px; border-right: 5px solid #f0b90b; text-align: right; min-height: 150px; line-height: 1.8; font-size: 1.1em; color: #f0b90b; }
-        .home-link { display: inline-block; margin-top: 25px; color: #848e9c; text-decoration: none; font-size: 0.9em; transition: 0.3s; }
-        .home-link:hover { color: #f0b90b; }
-        footer { margin-top: 50px; padding: 20px; border-top: 1px solid #2b3139; color: #848e9c; font-size: 0.8em; }
+        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; text-align: center; }
+        .card { background: #ffffff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        input { width: 85%; padding: 15px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 20px; font-size: 16px; }
+        .btn { background: #f0b90b; color: black; border: none; padding: 15px 40px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 90%; }
+        #res-box { margin-top: 30px; padding: 20px; background: #fafafa; border-radius: 12px; text-align: right; color: #000; white-space: pre-wrap; line-height: 1.8; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <header>
-        <h1 style="color: #f0b90b; margin-bottom: 5px;">📉 محلل الأسهم والعقارات الذكي</h1>
-        <p>تحليلات مالية دقيقة بلمسة سورية 🇸🇾</p>
-    </header>
-
-    <div class="input-group">
-        <h3 style="color: #f0b90b;">ماذا تريد أن نحلل اليوم؟</h3>
-        <input type="text" id="target-name" placeholder="مثال: أسهم تسلا، عقارات دبي، الذهب، بيتكوين...">
-        <br>
-        <button class="analyze-btn" onclick="runAnalysis()">بدء التحليل المالي 🔍</button>
-    </div>
-
-    <div id="result-box">
-        <i>أدخل اسم السهم أو العقار أعلاه وسيقوم الذكاء الاصطناعي بدراسة السوق لك فوراً... 🧠✨</i>
-    </div>
-
-    <a href="/" class="home-link">⬅️ العودة للرئيسية</a>
-
-    <footer>
-        <p>تصميم المبدع: <span style="color: #f0b90b;">عبد الرحمن</span></p>
-        <p>🇸🇾 فخر الصناعة السورية | التواصل: abdulrahmanalchoum3@gmail.com</p>
-    </footer>
+<div class="card">
+    <a href="/" style="color:#888; text-decoration:none; display:block; text-align:right;">⬅️ الرئيسية</a>
+    <h2>📈 الأسهم والعقارات</h2>
+    <input type="text" id="target-input" placeholder="اكتب اسم السهم أو المنطقة...">
+    <button class="btn" onclick="startAnalysis()">تحليل 🔍</button>
+    <div id="res-box">النتائج ستظهر هنا بالأسود الواضح... 📊</div>
 </div>
-
 <script>
-    async function runAnalysis() {
-        const target = document.getElementById('target-name').value;
-        const resultBox = document.getElementById('result-box');
-        
-        if (!target.trim()) {
-            alert("يا بطل، اكتب اسم السهم أو العقار أولاً!");
-            return;
-        }
-
-        resultBox.innerHTML = "<b>جاري تحليل اتجاهات السوق وجمع البيانات... 📊⏳</b>";
-
+    async function startAnalysis() {
+        const target = document.getElementById('target-input').value;
+        const resBox = document.getElementById('res-box');
+        if (!target) return;
+        resBox.innerText = "جاري التحليل... ⏳";
         try {
             const response = await fetch(`/stream_stocks?target=${encodeURIComponent(target)}`);
-            const reader = response.body.getReader();
-            resultBox.innerHTML = ""; // مسح رسالة الانتظار
-            
+            const reader = response.body.getReader(); resBox.innerText = "";
             while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                const chunk = new TextDecoder().decode(value);
-                resultBox.innerHTML += chunk;
-                // سكرول تلقائي للأسفل لرؤية التحليل سطر بسطر
-                window.scrollTo(0, document.body.scrollHeight);
+                const {done, value} = await reader.read(); if (done) break;
+                resBox.innerText += new TextDecoder().decode(value);
             }
-        } catch (error) {
-            resultBox.innerHTML = "⚠️ حدث خطأ في الاتصال بالسيرفر، تأكد أن الموقع يعمل في Render.";
-        }
+        } catch (e) { resBox.innerText = "⚠️ خطأ في الاتصال بالسيرفر."; }
     }
 </script>
-
 </body>
 </html>
