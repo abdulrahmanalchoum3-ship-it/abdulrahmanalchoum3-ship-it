@@ -1,58 +1,63 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دردشة عبد الرحمن AI 🇸🇾</title>
+    <meta charset="UTF-8"><title>الدردشة | عبدالرحمن AI</title>
     <style>
-        body { font-family: sans-serif; background: #0b0e11; color: white; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        header { background: #1e2329; padding: 15px; border-bottom: 1px solid #f0b90b; display: flex; justify-content: space-between; }
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 10px; border-radius: 8px; }
-        .user { align-self: flex-end; background: #f0b90b; color: black; font-weight: bold; }
-        .bot { align-self: flex-start; background: #2b3139; border: 1px solid #474d57; }
-        .input-area { background: #1e2329; padding: 15px; display: flex; gap: 10px; }
-        input[type="text"] { flex: 1; background: #2b3139; border: 1px solid #474d57; color: white; padding: 10px; border-radius: 5px; }
-        button { background: #f0b90b; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        body { font-family: sans-serif; background: #f4f4f9; color: #333; margin: 0; display: flex; height: 100vh; }
+        .sidebar { width: 260px; background: #2c2c2c; color: white; padding: 15px; display: flex; flex-direction: column; }
+        .new-btn { border: 1px solid #666; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center; margin-bottom: 20px; }
+        .history { flex: 1; overflow-y: auto; }
+        .chat-item { padding: 10px; background: #3d3d3d; border-radius: 5px; margin-bottom: 5px; cursor: pointer; font-size: 13px; }
+        .main { flex: 1; display: flex; flex-direction: column; background: #ffffff; }
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .msg { max-width: 80%; padding: 15px; border-radius: 15px; font-size: 16px; color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .u { align-self: flex-end; background: #e3efff; }
+        .b { align-self: flex-start; background: #ffffff; border: 1px solid #eee; }
+        input { width: 95%; padding: 15px; margin: 20px; border: 2px solid #ddd; border-radius: 10px; outline: none; font-size: 16px; }
     </style>
 </head>
 <body>
-<header>
-    <span>المنصة الذكية 🇸🇾</span>
-    <button onclick="newChat()" style="background:#eb4d4b; color:white;">🗑️ مسح</button>
-</header>
-<div id="chat-box"><div class="msg bot">أهلاً يا بطل! ارفع صورة أو اسألني عن أي شيء 🚀</div></div>
-<div class="input-area">
-    <input type="file" id="file-inp" style="display:none;" onchange="alert('تم اختيار الصورة! اطلب مني تحويلها لفيديو الآن.')">
-    <button onclick="document.getElementById('file-inp').click()" style="background:#474d57;">📎</button>
-    <input type="text" id="inp" placeholder="اسألني أو اطلب فيديو..." onkeypress="if(event.key==='Enter') send()">
-    <button onclick="send()">إرسال ✈️</button>
+<div class="sidebar">
+    <div class="new-btn" onclick="startNew()">+ محادثة جديدة</div>
+    <div class="history" id="h-list"></div>
+    <a href="/" style="color:#bbb; text-decoration:none; text-align:center; font-size:12px;">🏠 الرئيسية</a>
+</div>
+<div class="main">
+    <div id="chat-window"></div>
+    <input type="text" id="inp" placeholder="اكتب رسالتك هنا..." onkeypress="if(event.key==='Enter') send()">
 </div>
 <script>
+    let chats = JSON.parse(localStorage.getItem('chats_db')) || {}; let curId = null;
+    window.onload = renderHist;
+    function renderHist() {
+        const h = document.getElementById('h-list'); h.innerHTML = "";
+        Object.keys(chats).reverse().forEach(id => {
+            const div = document.createElement('div'); div.className = "chat-item"; div.innerText = chats[id].title;
+            div.onclick = () => loadChat(id); h.appendChild(div);
+        });
+    }
+    function startNew() { curId = Date.now().toString(); chats[curId] = { title: "محادثة جديدة", html: "" }; document.getElementById('chat-window').innerHTML = ""; }
     async function send() {
-        const inp = document.getElementById('inp');
-        const box = document.getElementById('chat-box');
-        if(!inp.value.trim()) return;
-        const txt = inp.value;
-        box.innerHTML += `<div class="msg user">${txt}</div>`;
-        inp.value = '';
-        const resDiv = document.createElement('div');
-        resDiv.className = 'msg bot';
-        resDiv.innerText = "جاري المعالجة... 🧠";
-        box.appendChild(resDiv);
-        box.scrollTop = box.scrollHeight;
-        
-        const response = await fetch(`/stream?user_input=${encodeURIComponent(txt)}`);
-        const reader = response.body.getReader();
-        resDiv.innerText = "";
+        const inp = document.getElementById('inp'); if(!inp.value.trim()) return;
+        if(!curId) startNew(); const txt = inp.value; inp.value = "";
+        if(chats[curId].title === "محادثة جديدة") { chats[curId].title = txt.substring(0, 25); renderHist(); }
+        add(txt, 'u'); const b = add("...", 'b');
+        const res = await fetch(`/stream?user_input=${encodeURIComponent(txt)}`);
+        const read = res.body.getReader(); b.innerText = "";
         while(true) {
-            const {done, value} = await reader.read();
-            if(done) break;
-            resDiv.innerText += new TextDecoder().decode(value);
-            box.scrollTop = box.scrollHeight;
+            const {done, value} = await read.read(); if(done) break;
+            b.innerText += new TextDecoder().decode(value);
+            chats[curId].html = document.getElementById('chat-window').innerHTML;
+            localStorage.setItem('chats_db', JSON.stringify(chats));
         }
     }
-    function newChat() { fetch('/new_chat').then(() => location.reload()); }
+    function add(t, c) {
+        const d = document.createElement('div'); d.className = `msg ${c}`; d.innerText = t;
+        document.getElementById('chat-window').appendChild(d);
+        document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
+        return d;
+    }
+    function loadChat(id) { curId = id; document.getElementById('chat-window').innerHTML = chats[id].html; }
 </script>
 </body>
 </html>
