@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><title>الأسهم | عبدالرحمن AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأسهم | المبرمج عبدالرحمن</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; text-align: center; }
-        .card { background: #ffffff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
-        input { width: 85%; padding: 15px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 20px; font-size: 16px; }
-        .btn { background: #f0b90b; color: black; border: none; padding: 15px 40px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 90%; }
-        #res-box { margin-top: 30px; padding: 20px; background: #fafafa; border-radius: 12px; text-align: right; color: #000; white-space: pre-wrap; line-height: 1.8; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 600px; text-align: center; }
+        .nav { display: flex; justify-content: space-between; margin-bottom: 40px; }
+        input { width: 100%; padding: 16px; border: 1px solid #dadce0; border-radius: 30px; outline: none; box-sizing: border-box; box-shadow: 0 1px 6px rgba(0,0,0,0.1); font-size: 16px; }
+        .btn { background: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 20px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+        #res-box { margin-top: 30px; padding: 20px; border-radius: 15px; background: #f8f9fa; text-align: right; min-height: 150px; white-space: pre-wrap; line-height: 1.7; border: 1px solid #eee; color: #000; }
     </style>
 </head>
 <body>
-<div class="card">
-    <a href="/" style="color:#888; text-decoration:none; display:block; text-align:right;">⬅️ الرئيسية</a>
-    <h2>📈 الأسهم والعقارات</h2>
-    <input type="text" id="target-input" placeholder="اكتب اسم السهم أو المنطقة...">
-    <button class="btn" onclick="startAnalysis()">تحليل 🔍</button>
-    <div id="res-box">النتائج ستظهر هنا بالأسود الواضح... 📊</div>
+<div class="container">
+    <div class="nav"><a href="/" style="text-decoration:none; color:#1a73e8;">⬅️ العودة</a> <b style="color:#5f6368;">محلل 2026</b></div>
+    <h2 style="font-weight:400;">ماذا تريد أن نحلل اليوم؟ ✨</h2>
+    <input type="text" id="target" placeholder="مثلاً: سهم آبل أو سوق العقارات...">
+    <button class="btn" onclick="analyze()">ابدأ التحليل 📈</button>
+    <div id="res-box">النتائج ستظهر هنا بوضوح...</div>
+    <p style="font-size:11px; color:#ccc; margin-top:40px;">صنع بواسطة المبرمج عبدالرحمن الصانع سوري</p>
 </div>
 <script>
-    async function startAnalysis() {
-        const target = document.getElementById('target-input').value;
-        const resBox = document.getElementById('res-box');
-        if (!target) return;
-        resBox.innerText = "جاري التحليل... ⏳";
-        try {
-            const response = await fetch(`/stream_stocks?target=${encodeURIComponent(target)}`);
-            const reader = response.body.getReader(); resBox.innerText = "";
-            while (true) {
-                const {done, value} = await reader.read(); if (done) break;
-                resBox.innerText += new TextDecoder().decode(value);
-            }
-        } catch (e) { resBox.innerText = "⚠️ خطأ في الاتصال بالسيرفر."; }
+    async function analyze() {
+        const val = document.getElementById('target').value; if(!val) return;
+        const box = document.getElementById('res-box'); box.innerText = "جاري التحليل لعام 2026... ⏳";
+        const res = await fetch(`/stream_stocks?target=${encodeURIComponent(val)}`);
+        const reader = res.body.getReader(); box.innerText = "";
+        while(true) {
+            const {done, value} = await reader.read(); if(done) break;
+            box.innerText += new TextDecoder().decode(value);
+        }
     }
 </script>
 </body>
