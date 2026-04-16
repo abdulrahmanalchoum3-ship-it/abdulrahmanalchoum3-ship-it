@@ -1,11 +1,11 @@
-import os
-from flask import Flask, render_template, request, Response, stream_with_context, session
+from flask import Flask, render_template, request, Response, stream_with_context
 from g4f.client import Client
 
 app = Flask(__name__)
-app.secret_key = "abdulrahman_syrian_hero_2026"
+app.secret_key = "abdulrahman_final_2026"
 client = Client()
 
+# رابط الدعم الخاص بك
 SUPPORT_LINK = "https://www.binance.com/referral/earn-together/refer2earn-usdc/claim?hl=en&ref=GRO_28502_NRJGG"
 
 @app.route('/')
@@ -20,32 +20,39 @@ def chat_page():
 def stocks_page():
     return render_template('stocks.html')
 
-@app.route('/new_chat')
-def new_chat():
-    session['messages'] = []
-    return "success"
-
+# محرك الدردشة الذكي (مع حماية المحتوى)
 @app.route('/stream')
 def chat_stream():
     user_input = request.args.get('user_input')
-    if 'messages' not in session: session['messages'] = []
-    
-    system_instr = "أنت مساعد ذكي في منصة عبد الرحمن AI. استخدم الإيموجي 🚀. أنت فخر الصناعة السورية 🇸🇾. إذا طلب المستخدم صورة أو فيديو، ساعده بالوصف."
-    session['messages'].append({"role": "user", "content": user_input})
-    messages = [{"role": "system", "content": system_instr}] + session['messages'][-10:]
-
     def generate():
-        response = client.chat.completions.create(model="gpt-4", messages=messages, stream=True)
-        full_res = ""
+        system_prompt = "أنت مساعد ذكي في منصة عبدالرحمن. يمنع منعاً باتاً تقديم أي محتوى جنسي أو غير لائق. التزم بالأدب."
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": user_input}],
+            stream=True
+        )
         for chunk in response:
             content = chunk.choices[0].delta.content
-            if content:
-                full_res += content
-                yield content
-        session['messages'].append({"role": "assistant", "content": full_res})
-        session.modified = True
+            if content: yield content
+    return Response(stream_with_context(generate()), mimetype='text/plain')
+
+# محرك الأسهم والعقارات (تم الإصلاح)
+@app.route('/stream_stocks')
+def stream_stocks():
+    target = request.args.get('target')
+    def generate():
+        system_prompt = "أنت خبير مالي. قدم تحليلاً دقيقاً ومختصراً للسهم أو العقار المطلوب."
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": target}],
+            stream=True
+        )
+        for chunk in response:
+            content = chunk.choices[0].delta.content
+            if content: yield content
     return Response(stream_with_context(generate()), mimetype='text/plain')
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True, port=5000)
